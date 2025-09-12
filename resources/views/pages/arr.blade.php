@@ -1,33 +1,37 @@
-@extends('layouts.base')
-
-@section('app')
-    <!-- Rain Effect -->
-    <div class="rain-effect"></div>
-
-    <!-- Sidebar Overlay for Mobile -->
-    <div class="sidebar-overlay fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleSidebar()"></div>
-
-    <div class="dashboard-container flex min-h-screen">
-        <!-- Sidebar -->
-        @include('partials.sidebar')
-
-        <!-- Main Content -->
-        <div class="main-content flex-1 transition-all duration-400 lg:ml-64" id="mainContent">
-            <!-- Topbar -->
-            @include('partials.topbar')
-
-            <!-- Content Wrapper -->
-            <div class="content-wrapper p-5 lg:p-8">
-                @yield('content')
-            </div>
-        </div>
-    </div>
-
-    
-@endsection
-@push('styles')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Course - Learning Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'mac-red': '#ff5f56',
+                        'mac-yellow': '#ffbd2e',
+                        'mac-green': '#27c93f',
+                        'sidebar-bg': '#1f2937',
+                        'sidebar-text': '#f3f4f6',
+                        'topbar-bg': '#ffffff',
+                        'topbar-text': '#374151',
+                        'content-bg': '#f9fafb',
+                        'module-bg': '#f8fafc',
+                        'module-border': '#e2e8f0',
+                        'focus-ring': '#3b82f6',
+                        'button-primary': '#4f46e5',
+                        'button-hover': '#4338ca'
+                    },
+                    transitionDuration: {
+                        '400': '400ms'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         :root {
             --mac-red: #ff5f56;
@@ -138,34 +142,185 @@
             to { transform: translateY(calc(100vh + 100px)); }
         }
     </style>
-@endpush
-@push('scripts')
-<script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'mac-red': '#ff5f56',
-                        'mac-yellow': '#ffbd2e',
-                        'mac-green': '#27c93f',
-                        'sidebar-bg': '#1f2937',
-                        'sidebar-text': '#f3f4f6',
-                        'topbar-bg': '#ffffff',
-                        'topbar-text': '#374151',
-                        'content-bg': '#f9fafb',
-                        'module-bg': '#f8fafc',
-                        'module-border': '#e2e8f0',
-                        'focus-ring': '#3b82f6',
-                        'button-primary': '#4f46e5',
-                        'button-hover': '#4338ca'
-                    },
-                    transitionDuration: {
-                        '400': '400ms'
-                    }
-                }
-            }
-        }
-    </script>
+</head>
+<body class="font-sans m-0 p-0 transition-all duration-400" style="background-color: var(--content-bg); color: var(--topbar-text);">
+    <!-- Rain Effect -->
+    <div class="rain-effect"></div>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleSidebar()"></div>
+
+    <div class="dashboard-container flex min-h-screen">
+        <!-- Sidebar -->
+        <div class="sidebar fixed h-screen z-50 shadow-xl transition-all duration-400 w-64 lg:w-64" 
+             style="background-color: var(--sidebar-bg); color: var(--sidebar-text); transform: translateX(-100%);" 
+             id="sidebar">
+            <div class="sidebar-header p-5 border-b border-white border-opacity-10 flex justify-between items-center">
+                <h2 class="text-xl font-bold">LMS Dashboard</h2>
+                <button class="sidebar-close lg:hidden bg-transparent border-none cursor-pointer" 
+                        style="color: var(--sidebar-text);" onclick="toggleSidebar()">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <nav class="sidebar-menu py-4">
+                <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
+                   style="color: var(--sidebar-text);">
+                    <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
+                   style="color: var(--sidebar-text);">
+                    <i class="fas fa-book mr-3 w-5 text-center"></i>
+                    Courses
+                </a>
+                <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
+                   style="color: var(--sidebar-text);">
+                    <i class="fas fa-users mr-3 w-5 text-center"></i>
+                    Students
+                </a>
+                <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
+                   style="color: var(--sidebar-text);">
+                    <i class="fas fa-chart-bar mr-3 w-5 text-center"></i>
+                    Analytics
+                </a>
+                <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
+                   style="color: var(--sidebar-text);">
+                    <i class="fas fa-cog mr-3 w-5 text-center"></i>
+                    Settings
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content flex-1 transition-all duration-400 lg:ml-64" id="mainContent">
+            <!-- Topbar -->
+            <div class="topbar sticky top-0 z-30 px-8 py-4 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-0 shadow-lg transition-all duration-400" 
+                 style="background-color: var(--topbar-bg); color: var(--topbar-text);">
+                <div class="flex items-center gap-4 w-full lg:w-auto">
+                    <button class="menu-toggle lg:hidden bg-transparent border-none text-2xl cursor-pointer" 
+                            style="color: var(--topbar-text);" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold">Create New Course</h1>
+                </div>
+                
+                <div class="user-menu flex items-center gap-4 relative w-full lg:w-auto justify-between lg:justify-end">
+                    <div class="theme-switcher flex items-center gap-3 order-2 lg:order-1">
+                        <div class="theme-btn w-6 h-6 rounded-full cursor-pointer border-2 border-transparent transition-all duration-200 hover:scale-110 bg-gradient-to-r from-gray-100 to-gray-200" 
+                             onclick="setTheme('light')" id="lightTheme"></div>
+                        <div class="theme-btn w-6 h-6 rounded-full cursor-pointer border-2 border-transparent transition-all duration-200 hover:scale-110 bg-gradient-to-r from-gray-600 to-gray-800" 
+                             onclick="setTheme('dark')" id="darkTheme"></div>
+                        <div class="theme-btn w-6 h-6 rounded-full cursor-pointer border-2 border-transparent transition-all duration-200 hover:scale-110 bg-gradient-to-r from-sky-200 to-sky-300 relative overflow-hidden" 
+                             onclick="setTheme('rain')" id="rainTheme"></div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3 order-1 lg:order-2">
+                        <span class="look transition-all duration-200 hover:bg-blue-600 hover:text-white hover:px-2 hover:py-1 hover:rounded cursor-pointer">John Doe</span>
+                        <div class="user-avatar w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold cursor-pointer transition-transform duration-200 hover:scale-105" 
+                             onclick="toggleUserDropdown()" style="background-color: var(--button-primary);">
+                            JD
+                        </div>
+                        <div class="user-dropdown absolute top-full right-0 mt-3 min-w-48 rounded-lg shadow-xl py-3 z-50 hidden transition-all duration-300" 
+                             style="background-color: var(--topbar-bg);" id="userDropdown">
+                            <div class="user-dropdown-item px-5 py-3 flex items-center cursor-pointer transition-colors duration-200 hover:bg-black hover:bg-opacity-5">
+                                <i class="fas fa-user mr-3 w-5 text-center"></i>
+                                Profile
+                            </div>
+                            <div class="user-dropdown-item px-5 py-3 flex items-center cursor-pointer transition-colors duration-200 hover:bg-black hover:bg-opacity-5">
+                                <i class="fas fa-cog mr-3 w-5 text-center"></i>
+                                Settings
+                            </div>
+                            <div class="user-dropdown-item logout px-5 py-3 flex items-center cursor-pointer transition-colors duration-200 hover:bg-black hover:bg-opacity-5 text-red-500 border-t border-black border-opacity-10 mt-2">
+                                <i class="fas fa-sign-out-alt mr-3 w-5 text-center"></i>
+                                Logout
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Wrapper -->
+            <div class="content-wrapper p-5 lg:p-8">
+                <!-- macOS Window -->
+                <div class="mac-window rounded-xl shadow-2xl overflow-hidden transition-colors duration-400" 
+                     style="background-color: var(--module-bg);">
+                    <!-- macOS Titlebar -->
+                    <div class="mac-titlebar h-10 bg-gradient-to-b from-gray-200 to-gray-300 rounded-t-xl flex items-center px-4 border-b border-gray-400">
+                        <div class="mac-buttons flex gap-2">
+                            <div class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-red"></div>
+                            <div class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-yellow"></div>
+                            <div class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-green"></div>
+                        </div>
+                    </div>
+
+                    <!-- Course Content -->
+                    <div class="p-8">
+                        <!-- Course Basic Info -->
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-bold mb-6" style="color: var(--topbar-text);">Course Information</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="form-group">
+                                    <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Course Title</label>
+                                    <input type="text" 
+                                           class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                           style="border-color: var(--module-border); background-color: var(--module-bg);"
+                                           placeholder="Enter course title">
+                                </div>
+                                <div class="form-group">
+                                    <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Course Category</label>
+                                    <select class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                            style="border-color: var(--module-border); background-color: var(--module-bg);">
+                                        <option>Select Category</option>
+                                        <option>Programming</option>
+                                        <option>Design</option>
+                                        <option>Business</option>
+                                        <option>Marketing</option>
+                                    </select>
+                                </div>
+                                <div class="form-group md:col-span-2">
+                                    <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Course Description</label>
+                                    <textarea rows="4" 
+                                              class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                              style="border-color: var(--module-border); background-color: var(--module-bg);"
+                                              placeholder="Enter course description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Course Modules -->
+                        <div class="mb-8">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl font-bold" style="color: var(--topbar-text);">Course Modules</h2>
+                                <button class="btn-add bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 border-none cursor-pointer" 
+                                        onclick="addModule()">
+                                    <i class="fas fa-plus mr-2"></i>Add Module
+                                </button>
+                            </div>
+                            
+                            <div id="modulesContainer">
+                                <!-- Modules will be added here dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Save Course Button -->
+                        <div class="flex justify-end gap-4">
+                            <button class="px-6 py-3 border border-gray-300 rounded-md font-medium transition-colors duration-200 hover:bg-gray-50" 
+                                    style="color: var(--topbar-text); border-color: var(--module-border);">
+                                Save as Draft
+                            </button>
+                            <button class="btn-primary text-white px-6 py-3 rounded-md font-medium transition-colors duration-200 border-none cursor-pointer" 
+                                    style="background-color: var(--button-primary);" 
+                                    onmouseover="this.style.backgroundColor='var(--button-hover)'" 
+                                    onmouseout="this.style.backgroundColor='var(--button-primary)'">
+                                Publish Course
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         
         let moduleCount = 0;
@@ -260,7 +415,7 @@
                     </div>
                     <div class="module-content p-0 transition-all duration-300">
                         <div class="p-4">
-                            <input type="text" name="modules[${moduleCount}][title]"
+                            <input type="text" 
                                    class="module-title-input w-full p-3 border rounded-md mb-4 text-base transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
                                    style="border-color: var(--module-border); background-color: var(--module-bg);"
                                    placeholder="Enter module title">
@@ -341,25 +496,25 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="form-group">
                                         <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Title</label>
-                                        <input type="text" name="modules[${moduleId}][contents][${contentCount}][title]"
+                                        <input type="text" 
                                                class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
                                                style="border-color: var(--module-border); background-color: var(--module-bg);"
                                                placeholder="Enter video title">
                                     </div>
                                     <div class="form-group">
                                         <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video URL</label>
-                                        <input type="url" name="modules[${moduleId}][contents][${contentCount}][url]"
+                                        <input type="url" 
                                                class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
                                                style="border-color: var(--module-border); background-color: var(--module-bg);"
                                                placeholder="Enter video URL">
                                     </div>
                                 </div>
                                 <div class="form-group mt-4">
-                                    <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Length</label>
-                                    <input type="text" name="modules[${moduleId}][contents][${contentCount}][length]"
-                                               class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                               style="border-color: var(--module-border); background-color: var(--module-bg);"
-                                               placeholder="HH:MM:SS">
+                                    <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Description</label>
+                                    <textarea rows="3" 
+                                              class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                              style="border-color: var(--module-border); background-color: var(--module-bg);"
+                                              placeholder="Enter video description"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -523,5 +678,5 @@
             handleResize(); // Initial call
         });
     </script>
-    
-@endpush
+</body>
+</html>
