@@ -4,15 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-
+// use Yajra\DataTables\DataTables;
+use Yajra\DataTables\Facades\DataTables;
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = Category::latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $btn = '<a href="'.route('categories.edit', $row->id).'" class="text-blue-600 hover:underline mr-2">Edit</a>';
+                    $btn .= '<form action="'.route('categories.destroy', $row->id).'" method="POST" class="inline">
+                                '.csrf_field().method_field('DELETE').'
+                                <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                            </form>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view("categories.index");
     }
 
     /**
@@ -20,7 +37,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view("categories.form");
     }
 
     /**
@@ -28,7 +45,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            "name" => "required|unique:categories,name",
+            "text" => "nullable",
+        ]);
+        $category = Category::create($data);
+        return redirect()->route("categories.index");
     }
 
     /**

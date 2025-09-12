@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class,'index'])->name('home');
@@ -16,3 +18,5 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
 });
 
+Route::resource('categories', CategoryController::class)->except('show');
+Route::resource('levels', LevelController::class)->except('show');
