@@ -39,7 +39,7 @@
             --button-primary: #4f46e5;
             --button-hover: #4338ca;
             --sidebar-bg: #1f2937;
-            --sidebar-text: #f3f4f6;
+            --sidebar-text: #f3f4f6ff;
             --topbar-bg: #ffffff;
             --topbar-text: #374151;
             --content-bg: #f9fafb;
@@ -138,6 +138,42 @@
             to { transform: translateY(calc(100vh + 100px)); }
         }
     </style>
+    <style>
+    /* Search + filter inputs */
+    .dataTables_wrapper input[type="search"],
+    .dataTables_wrapper input[type="text"],
+    .dataTables_wrapper select {
+        color: #fff !important;
+        background-color: #1f2937 !important; /* dark gray */
+    }
+
+    .dataTables_wrapper input[type="search"]::placeholder {
+        color: #fff !important;
+        opacity: 0.7;
+    }
+
+    /* Pagination buttons */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: #fff !important;              /* white text */
+        background: transparent !important;  /* remove default bg */
+        border: none !important;
+    }
+
+    /* Active page */
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        color: #000 !important;              /* black text */
+        background: #fff !important;         /* white bg */
+        border-radius: 6px;
+        font-weight: 600;
+    }
+
+    /* Hover */
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        color: #000 !important;              /* black on hover */
+        background: #e5e7eb !important;      /* Tailwind gray-200 */
+        border-radius: 6px;
+    }
+</style>
 @endpush
 @push('scripts')
 <script>

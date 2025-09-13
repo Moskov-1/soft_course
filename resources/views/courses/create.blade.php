@@ -6,7 +6,7 @@
             <!-- macOS Titlebar -->
             <div class="mac-titlebar h-10 bg-gradient-to-b from-gray-200 to-gray-300 rounded-t-xl flex items-center px-4 border-b border-gray-400">
                 <div class="mac-buttons flex gap-2">
-                    <div class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-red"></div>
+                    <a href="{{ url()->previous() }}" class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-red"></a>
                     {{-- <div class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-yellow"></div>
                     <div class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-green"></div> --}}
                 </div>
@@ -30,7 +30,7 @@
                             <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Featured Video</label>
                             <input type="text" name='course_video'
                                     class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                    style="border-color: var(--module-border); "
+                                    style="border-color: var(--module-border);"
                                     placeholder="video url only">
                         </div>  
                         <div class="form-group">

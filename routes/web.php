@@ -22,6 +22,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware(['auth','auth.session'])->group(function () {
 
     Route::get('/', [PageController::class,'index'])->name('home');
+    Route::post('courses/toggle/publish', [CourseController::class, 'togglePublish'])->name('courses.toggle.publish');
     Route::resource('courses', CourseController::class)->except('show');
     Route::resource('categories', CategoryController::class)->except('show');
     Route::resource('levels', LevelController::class)->except('show');
