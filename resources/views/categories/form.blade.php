@@ -20,7 +20,7 @@
                     <!-- Name -->
                     <div>
                         <label for="name" class="block mb-1 text-gray-700 font-medium">Name</label>
-                        <input id="name" name="name" type="text" value="{{ old('name'), @$category->name }}" required
+                        <input id="name" name="name" type="text" value="{{ old('name', @$category->name) }}" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @error('name')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -31,7 +31,7 @@
                     <div>
                         <label for="name" class="block mb-2 text-base font-medium text-gray-700">Content</label>
 
-                        <input id="text" type="hidden" name="text" value="{{ old('text'), @$category->text }}">
+                        <input id="text" type="hidden" name="text" value="{{ old('text', @$category->text) }}">
                         <trix-editor input="text"
                                     class="trix-text w-full rounded-md border @error('text') border-red-500 @else border-gray-300 @enderror bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </trix-editor>
