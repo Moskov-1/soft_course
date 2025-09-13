@@ -11,7 +11,7 @@ class Content extends Model
     protected static function booted(){
         static::creating(function ($content) {
             if (is_null($content->order)) {
-                $lastOrder = Content::where('course_id', $content->course_id)
+                $lastOrder = Content::where('module_id', $content->course_id)
                                 ->max('order');
                 $content->order = $lastOrder ? $lastOrder + 1 : 1;
             }

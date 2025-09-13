@@ -37,18 +37,31 @@
 <!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css" />
 <style>
-/* macOS look tweaks */
 .dataTables_wrapper {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 #courses-table thead th {
-    background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+    background: linear-gradient(to bottom, #136ec9ff, #3056a1ff);
     font-weight: 600;
 }
 #courses-table tbody tr:hover {
     background-color: #f9fafb;
     transition: background 0.2s ease-in-out;
 }
+</style>
+<style>
+    /* Force white text in DataTables input/search */
+    .dataTables_wrapper input[type="search"],
+    .dataTables_wrapper input[type="text"],
+    .dataTables_wrapper select {
+        color: #fff !important; /* text white */
+        background-color: #1f2937 !important; /* optional: dark gray bg */
+    }
+
+    .dataTables_wrapper input[type="search"]::placeholder {
+        color: #fff !important; /* placeholder white */
+        opacity: 0.7; /* optional softer white */
+    }
 </style>
 @endpush
 
@@ -65,7 +78,16 @@ $(function () {
         ajax: "{{ route('courses.index') }}", // make sure this is your JSON endpoint
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'image', name: 'image', orderable: false, searchable: false },
+            { 
+                data: 'image', 
+                name: 'image', 
+                orderable: false, 
+                searchable: false,
+                render: function(data, type, row) {
+                    // return `<img src="${data}" alt="Course Image" width="60" height="60">`;
+                    return data;
+                }
+            },
             { data: 'title', name: 'title' },
             { data: 'modules', name: 'modules_count', searchable: false },
             { data: 'price', name: 'price' },

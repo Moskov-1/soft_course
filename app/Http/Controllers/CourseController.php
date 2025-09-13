@@ -8,9 +8,10 @@ use App\Models\Video;
 use App\Models\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
-
+use App\Rules\HhMmSsFormat;
 class CourseController extends Controller
 {
     /**
@@ -43,6 +44,7 @@ class CourseController extends Controller
                     </label>
                 ';
             })
+            
             ->addColumn('action', function ($row) {
                 return '
                     <a href="'.route('courses.edit', $row->id).'" class="text-blue-600 mr-2">Edit</a>
@@ -73,52 +75,91 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
-        $request->validate([
-            'title' => 'required|string|max:255',
+        // dd($request->all());
+        $data = $request->validate([
+            'course_title' => 'required|string|max:255',
+            'course_video' => 'nullable|string|max:255',
+            'course_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:9048',
+            'level_id' => 'required|exists:levels,id',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'text' => 'nullable|string',
+
             'modules' => 'required|array|min:1',
             'modules.*.title' => 'required|string|max:255',
             'modules.*.contents' => 'required|array|min:1',
-            'modules.*.contents.*.type' => 'required|in:video,text,quiz',
-            'modules.*.contents.*.data' => 'required|string', // adapt per type
+            'modules.*.contents.*.type' => 'required|in:video,quiz',
+            'modules.*.contents.*.title' => 'required|string|max:255',
+            'modules.*.contents.*.source' => 'required|in:local,vimeo,youtube,cloud',
+            'modules.*.contents.*.url' => 'required|string|max:500',
+            'modules.*.contents.*.length' => [
+                'nullable',
+                new HhMmSsFormat
+            ]
         ]);
 
-        DB::beginTransaction();
-
+        // dd($data);
         try {
-            // Always create course first
+            DB::beginTransaction();
+
             $course = Course::create([
-                'title' => $request->title,
+                'title' => $request->course_title,
+                'video' => $request->course_video,
+                'price' => $request->price,
+                'level_id' => $request->level_id,
+                'category_id' => $request->category_id,
+                'text' => $request->text,
                 'publish' => false,
             ]);
+            if( $request->hasFile('course_image') ) {
+                 $course->image = $request->file('course_image')->store('uploads/courses', 'public');
+                $course->save();
+            }
 
             foreach ($request->modules as $moduleIndex => $moduleData) {
-                // Create a savepoint before each module
                 DB::statement("SAVEPOINT module_savepoint");
 
                 try {
                     $module = $course->modules()->create([
-                        'title' => $moduleData['title'],
+                        'name' => $moduleData['title'],
                     ]);
 
-                    foreach ($moduleData['contents'] as $contentIndex => $contentData) {
-                        $module->contents()->create([
-                            'type' => $contentData['type'],
-                            'data' => $contentData['data'],
-                        ]);
+                    foreach ($moduleData['contents'] as $contentData) {
+                        if ($contentData['type'] == 'video') {
+                            if (!empty($contentData['length'])) {
+                                [$h, $m, $s] = explode(':', $contentData['length']);
+                                $lengthInSeconds = ($h * 3600) + ($m * 60) + $s;
+                            }
+
+                            $video = Video::create([
+                                'title' => $contentData['title'],
+                                'source_type' => $contentData['source'],
+                                'url' => $contentData['url'],
+                                'length_in_seconds' => $lengthInSeconds ?? null,
+                            ]);
+
+                            $module->contents()->create([
+                                'title' => $contentData['title'], 
+                                'contentable_type' => Video::class,
+                                'contentable_id' => $video->id,
+                            ]);
+                        }
                     }
 
-                    // release the savepoint since this module succeeded
                     DB::statement("RELEASE SAVEPOINT module_savepoint");
 
                 } catch (\Throwable $e) {
-                    // rollback just this module, but keep course + previous modules
+                    // Rollback just this module
                     DB::statement("ROLLBACK TO SAVEPOINT module_savepoint");
-                    break; // stop further processing
+                    // dd('module_error', $e->getMessage());
+                    
+                    // Store error in session and stop processing further modules
+                    return session()->flash('module_error', "Module {$moduleIndex}: " . $e->getMessage()."the course is drafted");
+                    break;
                 }
             }
 
-            // If every module was saved → publish course
+            // If all modules saved, publish
             if ($course->modules()->count() === count($request->modules)) {
                 $course->update(['publish' => true]);
             }
@@ -127,10 +168,12 @@ class CourseController extends Controller
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => $e->getMessage()]);
+                // dd('course error', $e->getMessage());
+
+            return session()->flash('module_error', $e->getMessage());
         }
-
-
+        session()->flash('success', 'Course and all modules saved successfully!');
+        return redirect()->back();
     }
     
     /**
@@ -138,7 +181,13 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        //
+        $data = [];
+        $data['course'] = $course;
+        $data['levels'] = Level::all();
+        $data['categories'] = Category::all();
+         $data['sources'] = Video::SOURCES;;
+
+        return view('courses.edit', $data);
     }
 
     /**
