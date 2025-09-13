@@ -26,14 +26,14 @@
             </div>
             <div class="user-dropdown absolute top-full right-0 mt-3 min-w-48 rounded-lg shadow-xl py-3 z-50 hidden transition-all duration-300" 
                     style="background-color: var(--topbar-bg);" id="userDropdown">
-                <div class="user-dropdown-item px-5 py-3 flex items-center cursor-pointer transition-colors duration-200 hover:bg-black hover:bg-opacity-5">
+                {{-- <div class="user-dropdown-item px-5 py-3 flex items-center cursor-pointer transition-colors duration-200 hover:bg-black hover:bg-opacity-5">
                     <i class="fas fa-user mr-3 w-5 text-center"></i>
                     Profile
                 </div>
                 <div class="user-dropdown-item px-5 py-3 flex items-center cursor-pointer transition-colors duration-200 hover:bg-black hover:bg-opacity-5">
                     <i class="fas fa-cog mr-3 w-5 text-center"></i>
                     Settings
-                </div>
+                </div> --}}
                 <form method="post" action="{{ route('logout') }}"
                 class="user-dropdown-item logout px-5 py-3 flex items-center cursor-pointer transition-colors duration-200 hover:bg-black hover:bg-opacity-5 text-red-500 border-t border-black border-opacity-10 mt-2">
                     @csrf

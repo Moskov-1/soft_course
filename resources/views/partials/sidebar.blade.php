@@ -9,30 +9,29 @@
         </button>
     </div>
     <nav class="sidebar-menu py-4">
-        <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
+        @foreach (config('sidebar')['items'] as $item)
+        @php
+            $isActive = false;
+            foreach ($item['active_on'] ?? [] as $pattern) {
+                if (request()->routeIs($pattern)) {
+                    $isActive = true;
+                    break;
+                }
+            }
+        @endphp
+       {{-- <a
+            href="{{ route($item['route']) }}"
+            class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors {{ $isActive ? 'bg-blue-600 text-white font-medium shadow-md' : 'text-gray-700 hover:bg-gray-100' }}"
+        >
+            <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i>
+            <span>{{ $item['text'] }}</span>
+        </a> --}}
+        <a href="{{ route($item['route']) }}" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline {{ $isActive ? 'bg-blue-600 text-white font-medium shadow-md' : 'text-gray-700 hover:bg-gray-100' }}" 
             style="color: var(--sidebar-text);">
-            <i class="fas fa-tachometer-alt mr-3 w-5 text-center"></i>
-            Dashboard
+            <i class="{{ $item['icon'] }}"></i>
+            {{ $item['text'] }}
         </a>
-        <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
-            style="color: var(--sidebar-text);">
-            <i class="fas fa-book mr-3 w-5 text-center"></i>
-            Courses
-        </a>
-        <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
-            style="color: var(--sidebar-text);">
-            <i class="fas fa-users mr-3 w-5 text-center"></i>
-            Students
-        </a>
-        <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
-            style="color: var(--sidebar-text);">
-            <i class="fas fa-chart-bar mr-3 w-5 text-center"></i>
-            Analytics
-        </a>
-        <a href="#" class="menu-item flex items-center px-5 py-3 transition-colors duration-300 hover:bg-white hover:bg-opacity-10 no-underline" 
-            style="color: var(--sidebar-text);">
-            <i class="fas fa-cog mr-3 w-5 text-center"></i>
-            Settings
-        </a>
+    @endforeach
+        
     </nav>
 </div>

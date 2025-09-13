@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\Video;
 use App\Models\Level;
+use App\Models\Content;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -207,8 +208,6 @@ class CourseController extends Controller
      * Update the specified resource in storage.
      */
     public function update(CourseRequest $request, Course $course){
-        
-
         try {
             DB::beginTransaction();
 
@@ -232,22 +231,55 @@ class CourseController extends Controller
                 $course->save();
             }
 
-            // delete old modules & contents (simplest approach)
-            $course->modules()->each(function ($module) {
-                $module->contents()->delete();
+            $existingModuleIds = $course->modules()->pluck('id')->toArray();
+            $requestModuleIds = collect($request->modules)->pluck('id')->filter()->toArray(); // front sends existing module IDs
+
+            // Delete modules removed in frontend
+            $modulesToDelete = array_diff($existingModuleIds, $requestModuleIds);
+            Module::whereIn('id', $modulesToDelete)->each(function ($module) {
+                // delete associated contents + videos
+                $module->contents()->each(function ($content) {
+                    if ($content->contentable_type === Video::class && $content->contentable) {
+                        $content->contentable->delete();
+                    }
+                    $content->delete();
+                });
                 $module->delete();
             });
 
-            // re-create modules and contents
-            foreach ($request->modules as $moduleIndex => $moduleData) {
+            // Sync modules from request
+            foreach ($request->modules as $moduleData) {
                 DB::statement("SAVEPOINT module_savepoint");
                 try {
-                    $module = $course->modules()->create([
-                        'name' => $moduleData['title'],
-                    ]);
+                    if (!empty($moduleData['id'])) {
+                        // update existing module
+                        $module = Module::find($moduleData['id']);
+                        $module->update(['name' => $moduleData['title']]);
+                    } else {
+                        // create new module
+                        $module = $course->modules()->create(['name' => $moduleData['title']]);
+                    }
 
+                    $existingContentIds = $module->contents()->pluck('id')->toArray();
+                    $requestContentIds = collect($moduleData['contents'])->pluck('id')->filter()->toArray();
+
+                    // delete removed contents
+                    $contentsToDelete = array_diff($existingContentIds, $requestContentIds);
+                    Content::whereIn('id', $contentsToDelete)->each(function ($content) {
+                        if ($content->contentable_type === Video::class && $content->contentable) {
+                            $content->contentable->delete();
+                        }
+                        $content->delete();
+                    });
+
+                    // Add/update contents
                     foreach ($moduleData['contents'] as $contentData) {
-                        if ($contentData['type'] === 'video') {
+                        if (!empty($contentData['id'])) {
+                            // update existing content (optional, e.g., title)
+                            $content = Content::find($contentData['id']);
+                            $content->update(['title' => $contentData['title']]);
+                            // handle video update if needed
+                        } else if ($contentData['type'] === 'video') {
                             $lengthInSeconds = null;
                             if (!empty($contentData['length'])) {
                                 [$h, $m, $s] = explode(':', $contentData['length']);
@@ -272,11 +304,11 @@ class CourseController extends Controller
                     DB::statement("RELEASE SAVEPOINT module_savepoint");
                 } catch (\Throwable $e) {
                     DB::statement("ROLLBACK TO SAVEPOINT module_savepoint");
-                    return session()->flash('module_error', "Module {$moduleIndex}: " . $e->getMessage() . " the course is drafted");
+                    return session()->flash('module_error', $e->getMessage());
                 }
             }
 
-            // mark published if all modules saved
+            // publish if all modules saved
             if ($course->modules()->count() === count($request->modules)) {
                 $course->update(['publish' => true]);
             }
