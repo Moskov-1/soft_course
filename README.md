@@ -3,6 +3,10 @@
 📄 For detailed documentation, please visit:  
 [Google Docs Link](https://docs.google.com/document/d/1FP5s-sI_pZK77Wj_PrvnBFeeO8xUgKsymHRq46jwEyw/edit?usp=sharing)
 
+🎦 For Video Demonstration, please visit:  
+[Google Drive Link](https://drive.google.com/file/d/1jJXD1fAsiINYDLAgZugmLLfZufJpd36B/view)
+
+
 ---
 
 A modular LMS-type project built with **Laravel**.  
@@ -32,6 +36,7 @@ use z_extra/build as substitude.
   - Polymorphic Relations
   - Scalable Architechture
   - Separate Request hook per feature
+  - Dynamic Components
 
 - **Courses**  
   - Create unlimited courses.  
