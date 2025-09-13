@@ -10,7 +10,7 @@ class Video extends Model
     const SOURCES = [
         'youtube',
         'vimeo',
-        'cloudinary',
+        'cloud',
         'local',
     ];
 

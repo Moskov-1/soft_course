@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\Video;
 use App\Models\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,7 +64,8 @@ class CourseController extends Controller
         $data= [];
         $data['levels'] = Level::all();
         $data['categories'] = Category::all();
-        return view('pages.index', $data);
+        $data['sources'] = Video::SOURCES;;
+        return view('courses.create', $data);
      }
 
     /**

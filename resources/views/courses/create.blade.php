@@ -12,7 +12,7 @@
                 </div>
                 <span class="ml-3 text-gray-700 font-medium">Create Course</span>
             </div>
-
+            
             <!-- Course Content -->
             <div class="p-8">
                 <!-- Course Basic Info -->
@@ -23,34 +23,34 @@
                             <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Course Title</label>
                             <input type="text" name='course_title'
                                     class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                    style="border-color: var(--module-border); "
+                                    style="border-color: var(--module-border); color: black;"
                                     placeholder="Enter course title">
                         </div>  
                         <div class="form-group">
                             <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Featured Video</label>
                             <input type="text" name='course_video'
                                     class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                    style="border-color: var(--module-border);"
+                                    style="border-color: var(--module-border);  color: black"
                                     placeholder="video url only">
                         </div>  
                         <div class="form-group">
                             <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Thumbnail</label>
                             <input type="text" name='course_image'
                                     class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                    style="border-color: var(--module-border); "
+                                    style="border-color: var(--module-border);  color: black "
                                     placeholder="Enter thumnail">
                         </div>  
                         <div class="form-group">
                             <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Course Price</label>
                             <input type="text" name='price'
                                     class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                    style="border-color: var(--module-border); "
+                                    style="border-color: var(--module-border);  color: black"
                                     placeholder="Enter course title">
                         </div>  
                         <div class="form-group">
                             <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Course Level</label>
                             <select class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                    style="border-color: var(--module-border); ">
+                                    style="border-color: var(--module-border);  color: black">
                                 <option>Select Level</option>
                                 @foreach ($levels as $level)
                                     <option value="{{ $level->id }}">{{ $level->name }}</option>
@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Course Category</label>
                             <select class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                    style="border-color: var(--module-border); ">
+                                    style="border-color: var(--module-border);  color: black">
                                 <option>Select Category</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -72,7 +72,7 @@
 
                             <input id="text" type="hidden" name="text" value="{{ old('text') }}">
                             <trix-editor input="text"  
-                            style="border-color: var(--module-border); "
+                            style="border-color: var(--module-border);  color: black"
                             {{-- style="border-color: var(--module-border); background-color: var(--module-bg);" --}}
                                         class="trix-text w-full rounded-md border @error('text') border-red-500 @else border-gray-300 @enderror bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </trix-editor>
@@ -155,7 +155,7 @@
                         <div class="p-4">
                             <input type="text" name="modules[${moduleCount}][title]"
                                    class="module-title-input w-full p-3 border rounded-md mb-4 text-base transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                   style="border-color: var(--module-border);"
+                                   style="border-color: var(--module-border);  color: black"
                                    placeholder="Enter module title">
                             
                             <div class="flex justify-between items-center mb-4">
@@ -202,7 +202,8 @@
                 'text': 'fas fa-file-text',
                 'quiz': 'fas fa-question-circle'
             };
-            
+            const SOURCES = @json($sources);
+            console.log(SOURCES);
             if (type === 'video') {
                 contentHtml = `
                     <div class="content-item relative p-4 border rounded-lg mb-4 transition-all duration-400" 
@@ -227,23 +228,31 @@
                                         <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Title</label>
                                         <input type="text" name="modules[${moduleId}][contents][${contentCount}][title]"
                                                class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                               style="border-color: var(--module-border);"
+                                               style="border-color: var(--module-border);  color: black"
                                                placeholder="Enter video title">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Source</label>
+                                        <input type="url" name="modules[${moduleId}][contents][${contentCount}][source]"
+                                               class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                               style="border-color: var(--module-border);  color: black"
+                                               placeholder="Enter video URL">
                                     </div>
                                     <div class="form-group">
                                         <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video URL</label>
                                         <input type="url" name="modules[${moduleId}][contents][${contentCount}][url]"
                                                class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                               style="border-color: var(--module-border);"
+                                               style="border-color: var(--module-border);  color: black"
                                                placeholder="Enter video URL">
                                     </div>
                                 </div>
                                 <div class="form-group mt-4">
+                                    
                                     <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Length</label>
                                     <input type="text" name="modules[${moduleId}][contents][${contentCount}][length]"
-                                               class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                               style="border-color: var(--module-border);"
-                                               placeholder="HH:MM:SS">
+                                        class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                        style="border-color: var(--module-border);  color: black"
+                                        placeholder="HH:MM:SS">
                                 </div>
                             </div>
                         </div>
