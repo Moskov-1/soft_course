@@ -18,8 +18,8 @@ class LevelController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $btn = '<a href="'.route('categories.edit', $row->id).'" class="text-blue-600 hover:underline mr-2">Edit</a>';
-                    $btn .= '<form action="'.route('categories.destroy', $row->id).'" method="POST" class="inline">
+                    $btn = '<a href="'.route('levels.edit', $row->id).'" class="text-blue-600 hover:underline mr-2">Edit</a>';
+                    $btn .= '<form action="'.route('levels.destroy', $row->id).'" method="POST" class="inline">
                                 '.csrf_field().method_field('DELETE').'
                                 <button type="submit" class="text-red-600 hover:underline">Delete</button>
                             </form>';
@@ -54,19 +54,11 @@ class LevelController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Level $level)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Level $level)
     {
-        //
+        return view("levels.form", compact("level"));
     }
 
     /**
