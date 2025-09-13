@@ -6,7 +6,7 @@
         <!-- macOS Titlebar -->
         <div class="mac-titlebar h-10 bg-gradient-to-b from-gray-200 to-gray-300 rounded-t-xl flex items-center px-4 border-b border-gray-400">
             <div class="mac-buttons flex gap-2">
-                <a href="{{ url()->previous() }}" class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-red"></a>
+                <a href="{{ route('courses.index') }}" class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-red"></a>
             </div>
             <span class="ml-3 text-gray-700 font-medium">Edit Course</span>
             @section('title', 'Edit Course')

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->boolean("published")->default(true);
+            $table->foreignId("user_id")->constrained("users")->cascadeOnDelete();
             $table->string('intro_vid')->nullable();
             $table->string('image')->nullable();
             $table->float('price', 2)->default(100);

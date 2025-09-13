@@ -4,7 +4,7 @@
         <!-- macOS Titlebar -->
         <div class="mac-titlebar h-10 bg-gradient-to-b from-gray-200 to-gray-300 rounded-t-xl flex items-center px-4 border-b border-gray-400">
             <div class="mac-buttons flex gap-2">
-                <div class="mac-btn w-4 h-4 rounded-full bg-mac-red"></div>
+                <a href="{{ route('categories.index') }}" class="mac-btn w-4 h-4 rounded-full bg-mac-red"></a>
             </div>
             <span class="ml-3 text-gray-700 font-medium">Create Category</span>
         </div>

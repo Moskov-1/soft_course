@@ -23,7 +23,9 @@ class CourseController extends Controller
     public function index(Request $request)
     {   
         if ($request->ajax()) {
-            $data = Course::withCount('modules')->select('courses.*');
+            $data = Course::withCount('modules')
+            ->where('user_id', Auth::user()->id)
+            ->select('courses.*');
             return DataTables::of($data)
             ->addIndexColumn() // for #
             ->editColumn('image', function ($row) {
@@ -89,27 +91,7 @@ class CourseController extends Controller
     public function store(CourseRequest $request)
     {
         // dd($request->all());
-        $data = $request->validate([
-            'course_title' => 'required|string|max:255',
-            'course_video' => 'nullable|string|max:255',
-            'course_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:9048',
-            'level_id' => 'required|exists:levels,id',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric|min:0',
-            'text' => 'nullable|string',
-
-            'modules' => 'required|array|min:1',
-            'modules.*.title' => 'required|string|max:255',
-            'modules.*.contents' => 'required|array|min:1',
-            'modules.*.contents.*.type' => 'required|in:video,quiz',
-            'modules.*.contents.*.title' => 'required|string|max:255',
-            'modules.*.contents.*.source' => 'required|in:local,vimeo,youtube,cloud',
-            'modules.*.contents.*.url' => 'required|string|max:500',
-            'modules.*.contents.*.length' => [
-                'nullable',
-                new HhMmSsFormat
-            ]
-        ]);
+        
 
         // dd($data);
         try {
@@ -122,6 +104,7 @@ class CourseController extends Controller
                 'level_id' => $request->level_id,
                 'category_id' => $request->category_id,
                 'text' => $request->text,
+                'user_id' => Auth::user()->id,
                 'publish' => false,
             ]);
             if( $request->hasFile('course_image') ) {
@@ -194,6 +177,11 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
+        if(Auth::check()) {
+            if(Auth::user()->id !== $course->user_id) {
+                abort(403);
+            }
+        }
         $data = [];
         $data['course'] = $course;
         $data['levels'] = Level::all();
@@ -328,7 +316,12 @@ class CourseController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Course $course)
-    {
+    {   
+        if(Auth::check()) {
+            if(Auth::user()->id !== $course->user_id) {
+                abort(403);
+            }
+        }
         $course->modules()->each(function ($module) {
             $module->contents()->each(function ($content) {
                 // delete polymorphic contentable if it's a Video
