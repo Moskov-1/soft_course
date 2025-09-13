@@ -25,6 +25,14 @@ use z_extra/build as substitude.
   
 ## Features
 
+- **EDGE**
+  - tailwind css
+  - Yajra Datatables
+  - Authentication, Authorization
+  - Polymorphic Relations
+  - Scalable Architechture
+  - Separate Request hook per feature
+
 - **Courses**  
   - Create unlimited courses.  
   - Each course can have many **modules**.  
