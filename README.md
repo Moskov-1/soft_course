@@ -15,6 +15,14 @@ Authentication, Levels, and Categories built in.
 In case there is a problem with public/build folder, 
 use z_extra/build as substitude.
 
+## Requirements
+- **system**
+  - Composer version 2.8.6
+  - mysqli_pdo (XAMPP->php.ini)
+  - PHP >= php 8.2.12 
+  - nodejs v22.14.0 (my system)
+  - npm v10.9.2 (my system)
+  
 ## Features
 
 - **Courses**  
