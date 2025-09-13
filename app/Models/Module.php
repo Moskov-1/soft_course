@@ -16,4 +16,12 @@ class Module extends Model
             }
         });
     }
+
+    public function course(){
+        return $this->belongsTo(Course::class);
+    }
+
+    public function Content(){
+        return $this->hasMany(Content::class);
+    }
 }

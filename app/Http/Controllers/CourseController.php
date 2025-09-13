@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Course;
+use App\Models\Level;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -12,7 +14,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -20,8 +22,11 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
-    }
+        $data= [];
+        $data['levels'] = Level::all();
+        $data['categories'] = Category::all();
+        return view('pages.index', $data);
+     }
 
     /**
      * Store a newly created resource in storage.

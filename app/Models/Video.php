@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Video extends Model
 {
     protected $guarded = ['id'];
@@ -24,5 +24,8 @@ class Video extends Model
         return gmdate("H:i:s", $this->length_in_seconds);
     }
 
+    public function content(): MorphOne{
+        return $this->morphOne(Content::class, 'contentable');
+    }
 
 }

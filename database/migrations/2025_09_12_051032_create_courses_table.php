@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->boolean("published")->default(true);
             $table->string('intro_vid')->nullable();
             $table->string('image')->nullable();
             $table->float('price', 2)->default(100);

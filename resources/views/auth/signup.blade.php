@@ -57,7 +57,7 @@
         <!-- Login Redirect -->
         <p class="mt-6 text-center text-sm text-gray-600">
             Already have an account?
-            <a href="{{ route('signin.front') }}" class="text-blue-600 font-medium hover:underline">
+            <a href="{{ route('login') }}" class="text-blue-600 font-medium hover:underline">
                 Sign in
             </a>
         </p>

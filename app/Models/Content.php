@@ -17,6 +17,10 @@ class Content extends Model
             }
         });
     }
+
+    public function module(){
+        return $this->belongsTo(Module::class);
+    }
     public function contentable(){
         return $this->morphTo();
     }
