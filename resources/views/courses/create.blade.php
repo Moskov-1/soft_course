@@ -204,13 +204,20 @@
             };
             const SOURCES = @json($sources);
             console.log(SOURCES);
+
             if (type === 'video') {
+                // Build options dynamically from SOURCES
+                let sourceOptions = `<option value="">Select Source</option>`;
+                SOURCES.forEach(src => {
+                    sourceOptions += `<option value="${src}">${src.charAt(0).toUpperCase() + src.slice(1)}</option>`;
+                });
+                console.log(sourceOptions);
                 contentHtml = `
                     <div class="content-item relative p-4 border rounded-lg mb-4 transition-all duration-400" 
-                         style="background-color: rgba(255, 255, 255, 0.5); border-color: var(--module-border);" 
-                         id="content-${contentCount}">
+                        style="background-color: rgba(255, 255, 255, 0.5); border-color: var(--module-border);" 
+                        id="content-${contentCount}">
                         <div class="content-header flex justify-between items-center cursor-pointer py-2" 
-                             onclick="toggleContent(${contentCount})">
+                            onclick="toggleContent(${contentCount})">
                             <div class="content-title flex items-center gap-3">
                                 <i class="${iconMap[type]} text-red-500"></i>
                                 <span class="font-medium" style="color: var(--topbar-text);">Video Content</span>
@@ -224,33 +231,44 @@
                         <div class="content-body p-0 transition-all duration-300">
                             <div class="pt-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Title -->
                                     <div class="form-group">
                                         <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Title</label>
                                         <input type="text" name="modules[${moduleId}][contents][${contentCount}][title]"
-                                               class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                               style="border-color: var(--module-border);  color: black"
-                                               placeholder="Enter video title">
+                                            class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 
+                                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                            style="border-color: var(--module-border);  color: black"
+                                            placeholder="Enter video title">
                                     </div>
+
+                                    <!-- Source (SELECT instead of input) -->
                                     <div class="form-group">
                                         <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Source</label>
-                                        <input type="url" name="modules[${moduleId}][contents][${contentCount}][source]"
-                                               class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                               style="border-color: var(--module-border);  color: black"
-                                               placeholder="Enter video URL">
+                                        <select name="modules[${moduleId}][contents][${contentCount}][source]"
+                                                class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 
+                                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                                style="border-color: var(--module-border); color: black;">
+                                            ${sourceOptions}
+                                        </select>
                                     </div>
-                                    <div class="form-group">
+
+                                    <!-- URL -->
+                                    <div class="form-group col-span-2">
                                         <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video URL</label>
                                         <input type="url" name="modules[${moduleId}][contents][${contentCount}][url]"
-                                               class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
-                                               style="border-color: var(--module-border);  color: black"
-                                               placeholder="Enter video URL">
+                                            class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 
+                                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                            style="border-color: var(--module-border);  color: black"
+                                            placeholder="Enter video URL">
                                     </div>
                                 </div>
+
+                                <!-- Length -->
                                 <div class="form-group mt-4">
-                                    
                                     <label class="block mb-2 font-medium" style="color: var(--topbar-text);">Video Length</label>
                                     <input type="text" name="modules[${moduleId}][contents][${contentCount}][length]"
-                                        class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
+                                        class="w-full px-3 py-3 border rounded-md text-sm transition-colors duration-200 
+                                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20" 
                                         style="border-color: var(--module-border);  color: black"
                                         placeholder="HH:MM:SS">
                                 </div>
@@ -258,6 +276,8 @@
                         </div>
                     </div>
                 `;
+            
+
             } else if (type === 'text') {
                 contentHtml = `
                     <div class="content-item relative p-4 border rounded-lg mb-4 transition-all duration-400" 
