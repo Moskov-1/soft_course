@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\Video;
 use App\Models\Level;
+use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -104,7 +105,7 @@ class CourseController extends Controller
 
             $course = Course::create([
                 'title' => $request->course_title,
-                'video' => $request->course_video,
+                'intro_vid' => $request->course_video,
                 'price' => $request->price,
                 'level_id' => $request->level_id,
                 'category_id' => $request->category_id,
@@ -185,7 +186,8 @@ class CourseController extends Controller
         $data['course'] = $course;
         $data['levels'] = Level::all();
         $data['categories'] = Category::all();
-         $data['sources'] = Video::SOURCES;;
+        $data['sources'] = Video::SOURCES;
+        $data['modules'] = Module::where('course_id', $course->id)->with('contents.contentable')->get();
 
         return view('courses.edit', $data);
     }
@@ -193,10 +195,112 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Course $course)
-    {
-        //
+    public function update(Request $request, Course $course){
+        // dd($request->all());
+        $data = $request->validate([
+            'course_title' => 'required|string|max:255',
+            'course_video' => 'nullable|string|max:255',
+            'course_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:9048',
+            'level_id' => 'required|exists:levels,id',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'text' => 'nullable|string',
+
+            'modules' => 'required|array|min:1',
+            'modules.*.title' => 'required|string|max:255',
+            'modules.*.contents' => 'required|array|min:1',
+            'modules.*.contents.*.type' => 'required|in:video,quiz',
+            'modules.*.contents.*.title' => 'required|string|max:255',
+            'modules.*.contents.*.source' => 'required|in:local,vimeo,youtube,cloud',
+            'modules.*.contents.*.url' => 'required|string|max:500',
+            'modules.*.contents.*.length' => [
+                'nullable',
+                new HhMmSsFormat
+            ]
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // update course fields
+            $course->update([
+                'title' => $request->course_title,
+                'intro_vid' => $request->course_video,
+                'price' => $request->price,
+                'level_id' => $request->level_id,
+                'category_id' => $request->category_id,
+                'text' => $request->text,
+                'publish' => false,
+            ]);
+
+            // handle course image update
+            if ($request->hasFile('course_image')) {
+                if ($course->image && Storage::disk('public')->exists($course->image)) {
+                    Storage::disk('public')->delete($course->image);
+                }
+                $course->image = $request->file('course_image')->store('uploads/courses', 'public');
+                $course->save();
+            }
+
+            // delete old modules & contents (simplest approach)
+            $course->modules()->each(function ($module) {
+                $module->contents()->delete();
+                $module->delete();
+            });
+
+            // re-create modules and contents
+            foreach ($request->modules as $moduleIndex => $moduleData) {
+                DB::statement("SAVEPOINT module_savepoint");
+                try {
+                    $module = $course->modules()->create([
+                        'name' => $moduleData['title'],
+                    ]);
+
+                    foreach ($moduleData['contents'] as $contentData) {
+                        if ($contentData['type'] === 'video') {
+                            $lengthInSeconds = null;
+                            if (!empty($contentData['length'])) {
+                                [$h, $m, $s] = explode(':', $contentData['length']);
+                                $lengthInSeconds = ($h * 3600) + ($m * 60) + $s;
+                            }
+
+                            $video = Video::create([
+                                'title' => $contentData['title'],
+                                'source_type' => $contentData['source'],
+                                'url' => $contentData['url'],
+                                'length_in_seconds' => $lengthInSeconds,
+                            ]);
+
+                            $module->contents()->create([
+                                'title' => $contentData['title'],
+                                'contentable_type' => Video::class,
+                                'contentable_id' => $video->id,
+                            ]);
+                        }
+                    }
+
+                    DB::statement("RELEASE SAVEPOINT module_savepoint");
+                } catch (\Throwable $e) {
+                    DB::statement("ROLLBACK TO SAVEPOINT module_savepoint");
+                    return session()->flash('module_error', "Module {$moduleIndex}: " . $e->getMessage() . " the course is drafted");
+                }
+            }
+
+            // mark published if all modules saved
+            if ($course->modules()->count() === count($request->modules)) {
+                $course->update(['publish' => true]);
+            }
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return session()->flash('module_error', $e->getMessage());
+        }
+
+        session()->flash('success', 'Course updated successfully!');
+        return redirect()->back();
     }
+
 
     /**
      * Remove the specified resource from storage.
