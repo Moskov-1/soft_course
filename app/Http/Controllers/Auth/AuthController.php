@@ -66,6 +66,6 @@ class AuthController extends Controller
 
     public function logout(Request $request){
         auth()->logout();
-        return redirect()->route('signin.front');
+        return redirect()->route('login');
     }
 }

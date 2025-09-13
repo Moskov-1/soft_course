@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\User;
+use App\Models\Level;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,9 +17,24 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+         $this->call([
+            UserSeeder::class,
         ]);
+
+       
+            Level::create([
+                "name"=> "Beginner",
+                "text" => "Beginner Level",
+            ]);
+             Category::create([
+                "name"=> "Laravel",
+                "text" => "Laravel 11",
+             ]);
+       
     }
 }
