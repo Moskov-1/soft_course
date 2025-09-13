@@ -2,6 +2,14 @@
 
 @section('content')
 <div class="p-6 bg-white rounded-xl shadow-md">
+    <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800">✨ Levels</h2>
+            <a href="{{ route('levels.create') }}"
+               class="px-4 py-2 bg-gradient-to-r from-gray-200 to-gray-100 text-gray-800 font-medium rounded-lg shadow-sm hover:from-gray-300 hover:to-gray-200 transition">
+                ➕ Add New
+            </a>
+        </div>
     <h2 class="text-2xl font-semibold mb-6">Levels</h2>
 
     <table id="levels-table" class="min-w-full divide-y divide-gray-200">

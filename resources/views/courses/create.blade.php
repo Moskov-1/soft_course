@@ -12,6 +12,7 @@
                 </div>
                 <span class="ml-3 text-gray-700 font-medium">Create Course</span>
             </div>
+            @section('title', 'Create Course')
             
             <!-- Course Content -->
             <form class="p-8" action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">

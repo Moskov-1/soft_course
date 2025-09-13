@@ -5,7 +5,7 @@
                 style="color: var(--topbar-text);" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </button>
-        <h1 class="text-2xl font-bold">Create New Course</h1>
+        <h1 class="text-2xl font-bold">@yield('title')</h1>
     </div>
     
     <div class="user-menu flex items-center gap-4 relative w-full lg:w-auto justify-between lg:justify-end">

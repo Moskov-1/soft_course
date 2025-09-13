@@ -9,6 +9,7 @@
                 <a href="{{ url()->previous() }}" class="mac-btn w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold cursor-default bg-mac-red"></a>
             </div>
             <span class="ml-3 text-gray-700 font-medium">Edit Course</span>
+            @section('title', 'Edit Course')
         </div>
         <!-- Course Content -->
         <form class="p-8" action="{{ route('courses.update', $course->id) }}" method="POST" enctype="multipart/form-data">
