@@ -51,13 +51,13 @@ Below is an Entity-Relationship sketch showing how the major tables relate (add 
 (Add your own screenshots here to illustrate the app in action.)  
 
 - Courses Page  
-  ![Courses](docs/images/courses.png)  
+  ![Courses](z_extra/images/0.png)  
 
 - Modules Page  
-  ![Modules](docs/images/modules.png)  
+  ![Modules](docs/images/1.png)  
 
 - Content Creation  
-  ![Content](docs/images/content.png)  
+  ![Content](docs/images/2.png)  
 
 ---
 
