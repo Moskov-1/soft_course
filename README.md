@@ -1,65 +1,38 @@
-# 🎓 Soft Course
+# Soft Course 🎓
 
-A modular course management system built with **Laravel**.  
-This project allows you to create courses with unlimited nested modules and polymorphic content.
+A modular LMS-type project built with **Laravel**.  
+Courses → Modules → Polymorphic Content. Auth, Levels, Categories built in.
 
 ---
 
-## ✨ Features
+## Features
 
 - **Courses**  
-  - Each course can have unlimited modules.  
-  - Courses support **levels**, **categories**, and **dependencies**.  
-  - Authentication & authorization enabled.  
+  - Create unlimited courses.  
+  - Each course can have many **modules**.  
+  - Courses have **level** and **category** dependencies.  
+  - Authentication & authorization included (only logged-in users can manage content).  
 
 - **Modules**  
-  - Belong to a course.  
-  - Unlimited per course.  
-  - Nest and organize learning content.  
+  - Nested under courses.  
+  - Unlimited modules per course.  
 
 - **Content (Polymorphic)**  
-  - Nested inside modules.  
-  - Currently supports **Video** content type.  
-  - Extensible design → scope for other media types (e.g. Quiz, Text, PDF, Audio).  
+  - Nested under modules.  
+  - Content can be of different types (currently **Video**), with ability to extend (e.g. Text, Quiz, Audio, etc.).  
+  - Videos have fields like `title`, `source_type`, `url`, `length_in_seconds`.  
+
+- **Demo User Seeded**  
+  - There is a seeder that creates a demo user:  
+    - **Email**: `admin@gmail.com`  
+    - **Password**: `Soft123`
+
+- **Extra Assets Folder**  
+  - The `z_extra` folder holds an extra `manifest.json` and CSS to help resolve npm/build-related issues.  
 
 ---
 
-## 🖼️ Screenshots / UI
+## Database Schema Overview  
 
-_Add screenshots here for better visualization._
+Below is an Entity-Relationship sketch showing how the major tables relate:
 
-- Course creation page:  
-  ![Course Form](./docs/images/course-create.png)
-
-- Module nesting:  
-  ![Modules](./docs/images/modules.png)
-
-- Video content example:  
-  ![Video Content](./docs/images/video-content.png)
-
----
-
-## ⚙️ Installation
-
-_Replace this section with actual steps/commands once finalized._
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/Moskov-1/soft_course.git
-
-# 2. Navigate to project
-cd soft_course
-
-# 3. Install dependencies
-composer install
-npm install && npm run build
-
-# 4. Copy environment file and configure
-cp .env.example .env
-php artisan key:generate
-
-# 5. Run migrations & seeders
-php artisan migrate --seed
-
-# 6. Start local server
-php artisan serve
