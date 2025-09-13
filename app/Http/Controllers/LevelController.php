@@ -66,7 +66,13 @@ class LevelController extends Controller
      */
     public function update(Request $request, Level $level)
     {
-        //
+        $data = $request->validate([
+            "name" => "required|unique:levels,name,".$level->id,
+            "text" => "nullable",
+        ]);
+        $level->update($data);
+        session()->flash("success","Successfully updated level");
+        return redirect()->route("levels.index");
     }
 
     /**
@@ -74,6 +80,8 @@ class LevelController extends Controller
      */
     public function destroy(Level $level)
     {
-        //
+        $level->delete();
+        session()->flash("success","Successfully deleted level");
+        return redirect()->route("levels.index");
     }
 }

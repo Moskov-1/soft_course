@@ -53,20 +53,13 @@ class CategoryController extends Controller
         return redirect()->route("categories.index");
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
+ 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Category $category)
     {
-        //
+         return view("categories.form", compact("category"));
     }
 
     /**
@@ -74,7 +67,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $data = $request->validate([
+            "name" => "required|unique:levels,name,".$category->id,
+            "text" => "nullable",
+        ]);
+        $category->update($data);
+        session()->flash("success","Successfully updated category");
+        return redirect()->route("categories.index");
     }
 
     /**
@@ -82,6 +81,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        session()->flash("success","Successfully deleted level");
+        return redirect()->route("levels.index");
     }
 }
