@@ -32,6 +32,7 @@ use z_extra/build as substitude.
 - **EDGE**
   - tailwind css
   - Yajra Datatables
+  - Trix Text Editor
   - Authentication, Authorization
   - Polymorphic Relations
   - Scalable Architechture
