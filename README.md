@@ -1,7 +1,13 @@
 # Soft Course 🎓
 
+📄 For detailed documentation, please visit:  
+[Google Docs Link](https://docs.google.com/document/d/1FP5s-sI_pZK77Wj_PrvnBFeeO8xUgKsymHRq46jwEyw/edit?usp=sharing)
+
+---
+
 A modular LMS-type project built with **Laravel**.  
-Courses → Modules → Polymorphic Content. Auth, Levels, Categories built in.
+Structure: **Courses → Modules → Polymorphic Content**.  
+Authentication, Levels, and Categories built in.  
 
 ---
 
@@ -25,7 +31,7 @@ Courses → Modules → Polymorphic Content. Auth, Levels, Categories built in.
 - **Demo User Seeded**  
   - There is a seeder that creates a demo user:  
     - **Email**: `admin@gmail.com`  
-    - **Password**: `Soft123`
+    - **Password**: `Soft123`  
 
 - **Extra Assets Folder**  
   - The `z_extra` folder holds an extra `manifest.json` and CSS to help resolve npm/build-related issues.  
@@ -34,5 +40,47 @@ Courses → Modules → Polymorphic Content. Auth, Levels, Categories built in.
 
 ## Database Schema Overview  
 
-Below is an Entity-Relationship sketch showing how the major tables relate:
+Below is an Entity-Relationship sketch showing how the major tables relate (add an image here):  
 
+![Database Schema](docs/images/schema.png)  
+
+---
+
+## Screenshots  
+
+(Add your own screenshots here to illustrate the app in action.)  
+
+- Courses Page  
+  ![Courses](docs/images/courses.png)  
+
+- Modules Page  
+  ![Modules](docs/images/modules.png)  
+
+- Content Creation  
+  ![Content](docs/images/content.png)  
+
+---
+
+## Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Moskov-1/soft_course.git
+cd soft_course
+
+# 2. Install PHP dependencies
+composer install
+
+# 3. Install Node dependencies
+npm install
+npm run build   # or npm run dev
+
+# 4. Set up environment
+cp .env.example .env
+php artisan key:generate
+
+# 5. Run migrations and seeders
+php artisan migrate --seed
+
+# 6. Start the server
+php artisan serve
