@@ -11,6 +11,10 @@ Authentication, Levels, and Categories built in.
 
 ---
 
+## Caution 
+In case there is a problem with public/build folder, 
+use z_extra/build as substitude.
+
 ## Features
 
 - **Courses**  
@@ -50,14 +54,14 @@ Below is an Entity-Relationship sketch showing how the major tables relate (add 
 
 (Add your own screenshots here to illustrate the app in action.)  
 
+- Access  
+  ![Login](z_extra/images/0.png)  
+
 - Courses Page  
-  ![Courses](z_extra/images/0.png)  
+  ![Courses](z_extra/images/1.png)  
 
-- Modules Page  
-  ![Modules](docs/images/1.png)  
-
-- Content Creation  
-  ![Content](docs/images/2.png)  
+- Module Creation  
+  ![Module](z_extra/images/2.png)  
 
 ---
 
@@ -80,7 +84,12 @@ cp .env.example .env
 php artisan key:generate
 
 # 5. Run migrations and seeders
-php artisan migrate --seed
+php artisan migrate:fresh --seed
 
 # 6. Start the server
 php artisan serve
+
+```
+## TroubleShooting 
+In case there is a problem with public/build folder, 
+use z_extra/build as substitude.
