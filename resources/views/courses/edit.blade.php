@@ -125,7 +125,7 @@
                                 </div>
                                 <div class="module-actions flex items-center gap-2">
                                     <i class="fas fa-chevron-down accordion-arrow transition-transform duration-300" style="color: var(--topbar-text);"></i>
-                                    <button class="btn-remove w-5 h-5 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer border-none p-0 bg-mac-red hover:bg-red-600" 
+                                    <button type='button' class="btn-remove w-5 h-5 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer border-none p-0 bg-mac-red hover:bg-red-600" 
                                             onclick="removeModule({{ $index }}); event.stopPropagation();">×</button>
                                 </div>
                             </div>
@@ -287,7 +287,7 @@
                         </div>
                         <div class="module-actions flex items-center gap-2">
                             <i class="fas fa-chevron-down accordion-arrow transition-transform duration-300" style="color: var(--topbar-text);"></i>
-                            <button class="btn-remove w-5 h-5 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer border-none p-0 bg-mac-red hover:bg-red-600" 
+                            <button type='button' class="btn-remove w-5 h-5 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer border-none p-0 bg-mac-red hover:bg-red-600" 
                                     onclick="removeModule(${moduleCount}); event.stopPropagation();">×</button>
                         </div>
                     </div>

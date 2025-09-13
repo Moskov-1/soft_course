@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Rules\HhMmSsFormat;
+use App\Http\Requests\CourseRequest;
 class CourseController extends Controller
 {
     /**
@@ -47,9 +48,19 @@ class CourseController extends Controller
             })
             
             ->addColumn('action', function ($row) {
+                $editUrl = route('courses.edit', $row->id);
+                $deleteUrl = route('courses.destroy', $row->id);
+
                 return '
-                    <a href="'.route('courses.edit', $row->id).'" class="text-blue-600 mr-2">Edit</a>
-                    <a href="javascript:void(0)" data-id="'.$row->id.'" class="text-red-600 delete-course">Delete</a>
+                    <a href="'.$editUrl.'" class="text-blue-600 mr-2">Edit</a>
+                    <form action="'.$deleteUrl.'" method="POST" style="display:inline;">
+                        '.csrf_field().'
+                        '.method_field('DELETE').'
+                        <button type="submit" class="text-red-600 hover:underline"
+                                onclick="return confirm(\'Are you sure you want to delete this course?\')">
+                            Delete
+                        </button>
+                    </form>
                 ';
             })
             ->rawColumns(['image', 'published', 'action'])
@@ -74,7 +85,7 @@ class CourseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CourseRequest $request)
     {
         // dd($request->all());
         $data = $request->validate([
@@ -195,29 +206,8 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Course $course){
-        // dd($request->all());
-        $data = $request->validate([
-            'course_title' => 'required|string|max:255',
-            'course_video' => 'nullable|string|max:255',
-            'course_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:9048',
-            'level_id' => 'required|exists:levels,id',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric|min:0',
-            'text' => 'nullable|string',
-
-            'modules' => 'required|array|min:1',
-            'modules.*.title' => 'required|string|max:255',
-            'modules.*.contents' => 'required|array|min:1',
-            'modules.*.contents.*.type' => 'required|in:video,quiz',
-            'modules.*.contents.*.title' => 'required|string|max:255',
-            'modules.*.contents.*.source' => 'required|in:local,vimeo,youtube,cloud',
-            'modules.*.contents.*.url' => 'required|string|max:500',
-            'modules.*.contents.*.length' => [
-                'nullable',
-                new HhMmSsFormat
-            ]
-        ]);
+    public function update(CourseRequest $request, Course $course){
+        
 
         try {
             DB::beginTransaction();
@@ -307,7 +297,21 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        //
+        $course->modules()->each(function ($module) {
+            $module->contents()->each(function ($content) {
+                // delete polymorphic contentable if it's a Video
+                if ($content->contentable_type === Video::class && $content->contentable) {
+                    // optionally delete the actual video file if stored
+                    // Storage::disk('public')->delete($content->contentable->file_path);
+                    $content->contentable->delete();
+                }
+                $content->delete();
+            });
+            $module->delete();
+        });
+        $course->delete();
+        session()->flash('success','successfully deleted course');
+        return redirect()->route('courses.index');
     }
 
     public function togglePublish(Request $request){
